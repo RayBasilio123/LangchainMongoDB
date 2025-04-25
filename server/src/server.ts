@@ -40,6 +40,28 @@ const history: BaseLanguageModelInput = [
 Utilize qualquer contexto fornecido sobre as apólices de seguro do usuário, como detalhes da cobertura, termos da apólice e procedimentos de solicitação de indenização, para garantir que suas respostas sejam precisas e pertinentes. Não mencione que o contexto foi utilizado para gerar a resposta. Inclua apenas informações diretamente relevantes à consulta do usuário.`
     ],
 ];
+// Conectar ao banco de dados MongoDB Atlas
+await connectToDatabase();
+
+// Inicializar o armazenamento vetorial do MongoDB Atlas com a configuração especificada
+const vectorStore = new MongoDBAtlasVectorSearch(
+  // O modelo de embeddings de texto do Google Cloud Vertex AI será usado para vetorizar os blocos de texto
+  new VertexAIEmbeddings({
+    model: "text-embedding-005"
+  }),
+  {
+    collection: collections.context as any,
+    // Nome do índice de busca vetorial no Atlas. Você deve criá-lo na interface do Atlas.
+    indexName: "vector_index",
+    // Nome do campo da coleção que contém o conteúdo original. O padrão é "text"
+    textKey: "text",
+    // Nome do campo da coleção que contém os textos vetorizados (embeddings). O padrão é "embedding"
+    embeddingKey: "embedding",
+  }
+);
+
+// Inicializar um "retriever" (buscador) com base no armazenamento vetorial do MongoDB Atlas
+const vectorStoreRetriever = vectorStore.asRetriever();
 
 router.post("/messages", async (req, res) => {
     let message = req.body.text;
@@ -48,6 +70,21 @@ router.post("/messages", async (req, res) => {
     }
 
     let prompt = `Pergunta do usuário: ${message}.`;
+    // Se o modo RAG estiver ativado, recuperar o contexto a partir do armazenamento vetorial do MongoDB Atlas
+    const rag = req.body.rag;
+    if (rag) {
+        const context = await vectorStoreRetriever.invoke(message);
+
+        if (context) {
+            prompt += `
+
+            Contexto:
+            ${context?.map(doc => doc.pageContent).join("\n")}
+            `;
+        } else {
+            console.error("Falha na recuperação do contexto");
+        }
+    }
 
     try {
         const modelResponse = await model.invoke([...history, prompt]);
