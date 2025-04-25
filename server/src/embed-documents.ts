@@ -1,3 +1,25 @@
+import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
+import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { VertexAIEmbeddings } from "@langchain/google-vertexai";
+
+import { connectToDatabase } from "./database.js";
+
+// Carregar todos os arquivos PDF dentro do diretório especificado
+const directoryLoader = new DirectoryLoader(
+  "pdf_documents/",
+  {
+    ".pdf": (path: string) => new PDFLoader(path),
+  }
+);
+
+const docs = await directoryLoader.load();
+
+console.log(`Carregados ${docs.length} arquivos PDF do diretório local especificado.`);
+
+
+
 // Dividir os documentos PDF em pedaços usando o divisor de caracteres recursivo
 const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
