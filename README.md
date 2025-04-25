@@ -89,7 +89,7 @@ Esta demonstração foi inspirada no projeto [Chat Application with RAG Feature 
   <tr>
     <td align="center">
         <a href="https://github.com/RayBasilio123">
-            <img src="https://github.com/account.png" width="100px;" alt="Foto do Ray"/><br />
+            <img src="https://avatars.githubusercontent.com/u/58826286?s=96&v=4" width="100px;" alt="Foto do Ray"/><br />
             <sub><b>Ray Basilio</b></sub>
         </a><br />
     </td>
