@@ -1,104 +1,101 @@
-# RAG Chat Assistant with MongoDB Atlas, Google Cloud and Langchain
+# 🛡️ Assistente de Chat RAG com MongoDB Atlas, Google Cloud e Langchain
 
-This is a demo of a chatbot assistant using retrieval augmented generation (RAG).
+Esta é uma demonstração de um assistente de chatbot utilizando **RAG** (Geração Aumentada por Recuperação).
 
-## Technologies
+## 🛠️ Tecnologias
 
-The client is built with Angular and Angular Material. The server is built with Express.js and uses MongoDB Atlas for storing the vector data. The embeddings are generated with Google Cloud embeddings model. The conversation model uses Gemini 1.0 Pro model. The app also utilizes Langchain.
+- O cliente é desenvolvido com **Angular** e **Angular Material**.
+- O servidor é construído com **Express.js** e usa **MongoDB Atlas** para armazenar os dados vetoriais.
+- As embeddings são geradas com o modelo de embeddings do **Google Cloud**.
+- O modelo de conversa utiliza o **Gemini 1.0 Pro**.
+- A aplicação também faz uso da **Langchain**.
 
-## Prerequisites
+## ✅ Pré-requisitos
 
-1. [Node.js](https://nodejs.org/) LTS.
+1. [Node.js](https://nodejs.org/) versão LTS instalada.
+2. Conta no **Google Cloud** com as APIs do **Vertex AI** habilitadas.
 
-1. Google Cloud account with Vertex AI APIs enabled.
+## ⚙️ Configuração
 
-## Setup
+Siga os passos abaixo para configurar o assistente de chat para desenvolvimento local.
 
-Follow the steps below to set up the chat assistant for local development.
+### 🗄️ Configurar o Armazenamento Vetorial no MongoDB Atlas
 
-### MongoDB Atlas Vector Store Setup
+1. Crie uma conta no [MongoDB Atlas](https://mongodb.com/try?utm_campaign=devrel&utm_source=cross-post&utm_medium=cta&utm_content=google-cloud-rag&utm_term=stanimira.vlaeva) e implemente um banco de dados gratuito. Complete o guia rápido — crie um usuário de banco de dados e permita o acesso do seu IP.
 
-1. Create a [MongoDB Atlas](https://mongodb.com/try?utm_campaign=devrel&utm_source=cross-post&utm_medium=cta&utm_content=google-cloud-rag&utm_term=stanimira.vlaeva) account and deploy a free database. Complete the quickstart guide — create a database user and allowlist your IP address.
+2. Clone o repositório:
 
-1. Clone the repository.
-
-    ```
-    git clone https://github.com/mongodb-developer/Google-Cloud-RAG-Langchain.git rag-chatbot
-    cd rag-chatbot
-    ```
-
-1. Create a `.env` file with the following content:
-
-    ```
-    ATLAS_URI=<your-atlas-connection-string>
+    ```bash
+    git clone https://github.com/RayBasilio123/LangchainMongoDB.git
+    cd LangchainMongoDB
     ```
 
-1. Run the embedding script to vectorize the PDF data and store it in MongoDB Atlas.
+3. Crie um arquivo `.env` com o seguinte conteúdo:
 
-    **rag-chatbot/**
+    ```env
+    ATLAS_URI=<sua-string-de-conexão-do-atlas>
     ```
+
+4. Execute o script de embeddings para vetorizar os dados dos PDFs e armazená-los no MongoDB Atlas:
+
+    ```bash
     npm run embed-documents
     ```
 
-1. Go back to MongoDB Atlas and verify that the data has been stored in the `context` collection.
+5. No MongoDB Atlas, verifique se os dados foram armazenados na coleção `context`.
 
-1. Switch to the Atlas Search tab and click `Create Search Index`. Select `JSON Editor` in the **Atlas Vector Search** section. This is the last option in the list.
+6. Vá para a aba **Atlas Search** e clique em **Create Search Index**. Escolha **JSON Editor** na seção **Atlas Vector Search** (última opção da lista).
 
-1. From the left sidebar, select the `chat-rag` database and the `context` collection.
+7. Na barra lateral, selecione o banco de dados `chat-rag` e a coleção `context`.
 
-1. Add the following JSON schema:
+8. Adicione o seguinte esquema JSON:
 
-    ```
+    ```json
     {
         "fields": [
             {
-            "numDimensions": 768,
-            "path": "embedding",
-            "similarity": "euclidean",
-            "type": "vector"
+                "numDimensions": 768,
+                "path": "embedding",
+                "similarity": "euclidean",
+                "type": "vector"
             }
         ]
     }
     ```
 
-1. Wait for the status to change to `Active`.
+9. Aguarde até o status mudar para **Active**.
 
-### Run the application
+### 🚀 Executar a Aplicação
 
-1. Start the application with the following command:
+1. Inicie a aplicação com o comando:
 
-    **rag-chatbot/**
-    ```
+    ```bash
     npm start
     ```
 
-1. Open a browser and navigate to `http://localhost:4200`.
+2. Abra o navegador e vá para `http://localhost:4200`.
 
-1. Try asking the chatbot questions like "What is the coverage of my insurance policy?" or "What are the specifics of my car insurance?". Use the `RAG` toggle to switch between retrieval augmented generation and retrieval only.
+3. Tente fazer perguntas ao chatbot, como:
+   - "Qual é a cobertura da minha apólice de seguro?"
+   - "Quais são as especificações do meu seguro de carro?"
 
+   Use a opção de alternância `RAG` para mudar entre geração aumentada por recuperação e apenas recuperação.
 
-## Contributors ✨
+## 👨‍💻 Contribuidores ✨
 
-This demo is inspired by the [Chat Application with RAG Feature Toggle and Backend Server](https://github.com/voxic/GCP_RAG_Chatbot/tree/main).
+Esta demonstração foi inspirada no projeto [Chat Application with RAG Feature Toggle and Backend Server](https://github.com/voxic/GCP_RAG_Chatbot/tree/main).
 
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
 <table>
   <tr>
     <td align="center">
-        <a href="https://twitter.com/StanimiraVlaeva">
-            <img src="https://pbs.twimg.com/profile_images/1645826266770055168/SS9kFxoJ_400x400.jpg" width="100px;" alt=""/><br />
-            <sub><b>Stanimira Vlaeva</b></sub>
+        <a href="https://github.com/RayBasilio123">
+            <img src="https://github.com/account.png" width="100px;" alt="Foto do Ray"/><br />
+            <sub><b>Ray Basilio</b></sub>
         </a><br />
     </td>
   </tr>
 </table>
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+## ⚠️ Aviso
 
-
-
-## Disclaimer
-
-Use at your own risk; not a supported MongoDB product
+Use por sua conta e risco; este não é um produto oficial da MongoDB.
